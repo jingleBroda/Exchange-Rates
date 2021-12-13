@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Exchange Rates</string>
+    <string name="splash_string">Смотри курс валют</string>
+    <string name="splash_string2">сейчас!</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="data_default_text">Данный курс актуален на:</string>
+    <string name="data_today">23.11.2000</string>
+    <string name="nominal">Номинал</string>
+    <string name="name_money">Название валюты</string>
+    <string name="money_in_rubls">Курс к рублю</string>
+    <string name="rawno">=</string>
+    <string name="rub">RUB</string>
+    <string name="switchTextOne">Показать закрепленные валюты?</string>
+    <string name="switchTextTwo">Показать полный список валют?</string>
+</resources>
