@@ -3,24 +3,29 @@ package com.example.exchangerates.presentation.fragment.monetaryFragment
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.example.exchangerates.App
 import com.example.exchangerates.data.retrofite.RetrofiteService
 import com.example.exchangerates.data.room.ExchangeRatesRoomDao
+import com.example.exchangerates.di.component.DaggerAppComponent
 import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.domain.model.ResulteApiModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class MonetaryRateMenuFragmentViewModel(application: Application): AndroidViewModel(application) {
+class MonetaryRateMenuFragmentViewModel @Inject constructor(
+    retroServiceInside: RetrofiteService,
+    dbDaoInside: ExchangeRatesRoomDao
+    ): ViewModel() {
 
-    private val retroService: RetrofiteService = (application as App).getRetroService()
     private val compositeDisposable = CompositeDisposable()
-    private val dbDao: ExchangeRatesRoomDao = (application as App).getDbDao()
+    private val retroService = retroServiceInside
+    private val dbDao = dbDaoInside
 
     private var obserInGetAllDataDb: ((data: List<MoneyRoomModel>)->Unit)?=null
     private var obserInDataApi: ((data: ResulteApiModel)->Unit)?=null
-
 
     fun makeApi(){
         val zaprosApi = retroService.getActualMoney()

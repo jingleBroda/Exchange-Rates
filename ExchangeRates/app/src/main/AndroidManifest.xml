@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ExchangeRates">
         <activity
-            android:name=".MainActivity"
+            android:name=".navigator.MainActivity"
             android:exported="true"
             android:theme="@style/SplashScreen">
             <intent-filter>

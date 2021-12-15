@@ -14,9 +14,8 @@ class MoneyRecViewAdapter(context:Context, data: MutableMap<String, MoneyModel>)
 
     private val recAdaptContext = context
     private val recAdapterData = data
-
-    private var actualMoneyType:ArrayList<MoneyModel> = ArrayList() //хранит либо полный список либо
-                                                                    //список с закрепленными валютами
+    private var actualMoneyType:ArrayList<MoneyModel> = ArrayList() //хранит: либо полный список,
+                                                                    //либо список с закрепленными валютами
 
     private var oldMoneyType:ArrayList<MoneyModel> = ArrayList()    //хранит полный список валют
 
@@ -30,11 +29,9 @@ class MoneyRecViewAdapter(context:Context, data: MutableMap<String, MoneyModel>)
 
     }
 
-
     inner class MoneyRecViewHolder(view: View):RecyclerView.ViewHolder(view) {
 
         private val binding = MoneyRecViewRowBinding.bind(view)
-
 
         init {
             view.setOnClickListener{
@@ -49,8 +46,6 @@ class MoneyRecViewAdapter(context:Context, data: MutableMap<String, MoneyModel>)
         }
 
     }
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoneyRecViewHolder {
         val inflater = LayoutInflater.from(recAdaptContext)
@@ -70,6 +65,7 @@ class MoneyRecViewAdapter(context:Context, data: MutableMap<String, MoneyModel>)
         onClickIteam = listner
     }
 
+    //возврат к списку закрепленных валют
     fun updateRecViewInMoneyRoomModel(newData: List<MoneyRoomModel>){
 
         val transformerNewData:ArrayList<MoneyModel> = ArrayList()
@@ -87,6 +83,7 @@ class MoneyRecViewAdapter(context:Context, data: MutableMap<String, MoneyModel>)
         notifyDataSetChanged()
     }
 
+    //возврат к списку всех валют
     fun updateRecViewInMoneyModel(){
         actualMoneyType = oldMoneyType
         notifyDataSetChanged()

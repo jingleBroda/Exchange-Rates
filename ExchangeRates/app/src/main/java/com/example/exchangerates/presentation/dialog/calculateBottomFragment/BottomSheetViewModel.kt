@@ -1,23 +1,21 @@
-package com.example.exchangerates.presentation.fragment.calculateBottomFragment
+package com.example.exchangerates.presentation.dialog.calculateBottomFragment
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.room.RoomDatabase
-import com.example.exchangerates.App
-import com.example.exchangerates.data.retrofite.RetrofiteService
+import androidx.lifecycle.ViewModel
 import com.example.exchangerates.data.room.ExchangeRatesRoomDao
 import com.example.exchangerates.domain.model.MoneyRoomModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class BottomSheetViewModel(application: Application): AndroidViewModel(application) {
+class BottomSheetViewModel @Inject constructor(
+    dbDaoInside: ExchangeRatesRoomDao
+    ): ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
-    private val dbDao: ExchangeRatesRoomDao = (application as App).getDbDao()
+    private val dbDao = dbDaoInside
 
-    private var obserInGetAllDataDb: ((data: List<MoneyRoomModel>)->Unit)?=null
     private var obserInGetSpecificDataDb: ((data: MoneyRoomModel)->Unit)?=null
 
     fun makeDbSpecificData(charCode:String){
@@ -82,38 +80,3 @@ class BottomSheetViewModel(application: Application): AndroidViewModel(applicati
     }
 
 }
-
-/*
-fun makeDbData(){
-        val zaprosGetAllDb = dbDao.getCurrencyCours()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    obserInGetAllDataDb?.invoke(it)
-                },
-                {
-                    Log.d("GetDbError", it.toString())
-                }
-            )
-
-
-
-        compositeDisposable.add(zaprosGetAllDb)
-    }
-
-    fun getDbData(code:(data: List<MoneyRoomModel>)->Unit){
-        obserInGetAllDataDb = code
-    }
-
-    fun makeDeleteAllInfoDb(){
-        val zaprosDeleteDbData = dbDao.deleteAllData()
-            .subscribeOn(Schedulers.single())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
-
-
-
-        compositeDisposable.add(zaprosDeleteDbData)
-    }
- */

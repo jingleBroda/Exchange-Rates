@@ -1,4 +1,4 @@
-package com.example.exchangerates.presentation.fragment.calculateBottomFragment
+package com.example.exchangerates.presentation.dialog.calculateBottomFragment
 
 import android.content.Context
 import android.os.Bundle
@@ -10,26 +10,39 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
+import androidx.annotation.CallSuper
 import com.example.exchangerates.R
 import com.example.exchangerates.databinding.BottomShhetFragmentBinding
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.example.exchangerates.di.viewModelPropertyInject.ViewModelFactory
 import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.navigator.navigator
 import com.example.exchangerates.presentation.fragment.monetaryFragment.MonetaryRateMenuFragment
-import kotlin.properties.Delegates
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
+import dagger.android.support.AndroidSupportInjection
+import javax.inject.Inject
 
-class CalculateBottomSheetFragment():BottomSheetDialogFragment()   {
+
+class CalculateBottomSheetFragment():BottomSheetDialogFragment(), HasAndroidInjector  {
+
 
     private lateinit var binding:BottomShhetFragmentBinding
-    private lateinit var viewModel:BottomSheetViewModel
+
+    @Inject
+    lateinit var viewModelFactory:ViewModelFactory
+    lateinit var viewModel:BottomSheetViewModel
+
+    @Inject
+    lateinit var androidInjector: DispatchingAndroidInjector<Any?>
+
     private var insideCoursCurrency:Double = 0.0
     private var insideNameCurrency:String = ""
     private var editTextFocusParam = true
-
-   private var bottomLockStatus:Boolean = false
 
     companion object{
         val coursCurrencyKey = "coursСurrency"
@@ -49,9 +62,18 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment()   {
     }
 
 
+    override fun androidInjector(): AndroidInjector<Any?> = androidInjector
+    @CallSuper
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(BottomSheetViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[BottomSheetViewModel::class.java]
+
         insideCoursCurrency = requireArguments().getDouble(coursCurrencyKey, 0.0)
         insideNameCurrency = requireArguments().getString(nameCurrencyKey).toString()
 
@@ -64,13 +86,10 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment()   {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val root = inflater.inflate(R.layout.bottom_shhet_fragment, container)
         binding = BottomShhetFragmentBinding.bind(root)
-
-
-
         binding.nameSelectCurrency.text = insideNameCurrency
         binding.countRubCurrent.setText(insideCoursCurrency.toString())
 
-            dialog?.setOnShowListener { dialog ->
+        dialog?.setOnShowListener { dialog ->
             val d = dialog as BottomSheetDialog
             val bottomSheet =
                 d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
@@ -98,7 +117,6 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment()   {
             }
 
             binding.lockButton.setOnClickListener{
-                Log.d("lockButton", "kurwa")
                 AnalizeFunOnClickButtonLock(moneyRoomModel)
             }
 
@@ -163,9 +181,6 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment()   {
         })
 
 
-
-
-
         binding.countRubCurrent.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!editTextFocusParam) {
@@ -208,4 +223,6 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment()   {
         navigator().showNewScreen(tmpFragment)
         super.onDestroy()
     }
+
+
 }

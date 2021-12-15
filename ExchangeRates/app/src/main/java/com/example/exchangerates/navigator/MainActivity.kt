@@ -1,11 +1,9 @@
-package com.example.exchangerates
+package com.example.exchangerates.navigator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.exchangerates.navigator.Navigator
+import com.example.exchangerates.R
 import com.example.exchangerates.presentation.fragment.monetaryFragment.MonetaryRateMenuFragment
 
 class MainActivity : AppCompatActivity(), Navigator {

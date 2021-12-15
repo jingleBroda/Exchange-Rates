@@ -2,24 +2,27 @@ package com.example.exchangerates.presentation.fragment.monetaryFragment
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.exchangerates.R
 import com.example.exchangerates.databinding.FragmentMonetaryRateMenuBinding
-import com.example.exchangerates.domain.model.MoneyModel
-import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.presentation.adapter.MoneyRecViewAdapter
-import com.example.exchangerates.presentation.fragment.calculateBottomFragment.CalculateBottomSheetFragment
+import com.example.exchangerates.presentation.dialog.calculateBottomFragment.CalculateBottomSheetFragment
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-class MonetaryRateMenuFragment : Fragment() {
+class MonetaryRateMenuFragment :DaggerFragment()  {
 
    private lateinit var binding:FragmentMonetaryRateMenuBinding
-   private lateinit var viewModel: MonetaryRateMenuFragmentViewModel
+
+   @Inject
+   lateinit var viewModelFactory: ViewModelProvider.Factory
+   lateinit var viewModel: MonetaryRateMenuFragmentViewModel
+
    private lateinit var recViewAdapter: MoneyRecViewAdapter
    private var switchRecViewParam:Boolean = true
 
@@ -36,8 +39,10 @@ class MonetaryRateMenuFragment : Fragment() {
     }
 
     private fun init(root:View){
+
         binding = FragmentMonetaryRateMenuBinding.bind(root)
-        viewModel = ViewModelProvider(this).get(MonetaryRateMenuFragmentViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[MonetaryRateMenuFragmentViewModel::class.java]
+
 
         viewModel.makeApi()
         viewModel.makeDbData()
