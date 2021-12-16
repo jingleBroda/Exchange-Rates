@@ -2,7 +2,6 @@ package com.example.exchangerates.presentation.dialog.calculateBottomFragment
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.exchangerates.data.room.ExchangeRatesRoomDao
 import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.domain.usecase.MakeDbSpecificDataUseCase
 import com.example.exchangerates.domain.usecase.MakeDeleteSingeDataInfoDbUseCase
@@ -13,14 +12,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class BottomSheetViewModel @Inject constructor(
-    //dbDaoInside: ExchangeRatesRoomDao
     val makeDbSpecificDataUseCase: MakeDbSpecificDataUseCase,
     val makeSingleInsertDbDataUseCase: MakeSingleInsertDbDataUseCase,
     val makeDeleteSingeDataInfoDbUseCase: MakeDeleteSingeDataInfoDbUseCase
     ): ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
-    //private val dbDao = dbDaoInside
 
     private var obserInGetSpecificDataDb: ((data: MoneyRoomModel)->Unit)?=null
 

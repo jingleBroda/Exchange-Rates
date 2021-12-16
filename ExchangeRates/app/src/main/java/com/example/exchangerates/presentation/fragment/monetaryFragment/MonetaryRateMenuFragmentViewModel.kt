@@ -2,8 +2,7 @@ package com.example.exchangerates.presentation.fragment.monetaryFragment
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.exchangerates.data.retrofite.RetrofiteService
-import com.example.exchangerates.data.room.ExchangeRatesRoomDao
+import com.example.exchangerates.data.entity.MoneyRoomModelEntity
 import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.domain.model.ResulteApiModel
 import com.example.exchangerates.domain.usecase.MakeApiUseCase
@@ -14,15 +13,11 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class MonetaryRateMenuFragmentViewModel @Inject constructor(
-    //retroServiceInside: RetrofiteService,
-    //dbDaoInside: ExchangeRatesRoomDao
     val makeApiUseCase: MakeApiUseCase,
     val makeDbDataUseCase: MakeDbDataUseCase
     ): ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
-    //private val retroService = retroServiceInside
-    //private val dbDao = dbDaoInside
 
     private var obserInGetAllDataDb: ((data: List<MoneyRoomModel>)->Unit)?=null
     private var obserInDataApi: ((data: ResulteApiModel)->Unit)?=null
@@ -57,8 +52,8 @@ class MonetaryRateMenuFragmentViewModel @Inject constructor(
                     obserInGetAllDataDb?.invoke(it)
                 },
                 {
-                    val emptyMoneyRoomList:List<MoneyRoomModel> = arrayListOf()
-                    obserInGetAllDataDb?.invoke(emptyMoneyRoomList)
+                    val emptyMoneyRoomListEntity:List<MoneyRoomModel> = arrayListOf()
+                    obserInGetAllDataDb?.invoke(emptyMoneyRoomListEntity)
                     Log.d("GetDbError", it.toString())
                 }
             )

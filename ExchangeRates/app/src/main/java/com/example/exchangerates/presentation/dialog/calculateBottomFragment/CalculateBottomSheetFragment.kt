@@ -15,8 +15,9 @@ import com.example.exchangerates.databinding.BottomShhetFragmentBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.exchangerates.app.di.utils.ViewModelFactory
-import com.example.exchangerates.domain.model.MoneyRoomModel
+import com.example.exchangerates.data.entity.MoneyRoomModelEntity
 import com.example.exchangerates.app.navigator.navigator
+import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.presentation.fragment.monetaryFragment.MonetaryRateMenuFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -124,8 +125,8 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment(), HasAndroidInje
         }
     }
 
-    private fun AnalizeFunOnClickButtonLock(moneyRoomModel: MoneyRoomModel){
-        if(moneyRoomModel.lockStatus){
+    private fun AnalizeFunOnClickButtonLock(moneyRoomModelEntity: MoneyRoomModel){
+        if(moneyRoomModelEntity.lockStatus){
             binding.lockButton.setImageResource(R.drawable.unclock_currency)
             viewModel.makeDeleteSingeDataInfoDb(insideNameCurrency)
         }
