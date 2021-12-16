@@ -11,10 +11,7 @@ class MainActivity : AppCompatActivity(), Navigator {
         setTheme(R.style.Theme_ExchangeRates)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         showStartFragment()
-
-
     }
 
     private fun showStartFragment(){
