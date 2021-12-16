@@ -15,8 +15,8 @@ class RepositoryModule {
     @Singleton
     @Provides
     fun makeRepository(
-         dbDao: ExchangeRatesRoomDao,
-         retroService: RetrofiteService
+        dbDao: ExchangeRatesRoomDao,
+        retroService: RetrofiteService
     ):RepositoryExchangeRates{
         return RepositoryImpl(dbDao, retroService)
     }

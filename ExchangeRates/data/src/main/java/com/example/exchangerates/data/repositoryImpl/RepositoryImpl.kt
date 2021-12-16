@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
-    val dbDao:ExchangeRatesRoomDao,
+    val dbDao: ExchangeRatesRoomDao,
     val retroService: RetrofiteService
 ):RepositoryExchangeRates(){
 

@@ -14,7 +14,7 @@ class RoomModule() {
 
     @Singleton
     @Provides
-    fun createDB(app: App):ExchangeRatesRoomDB{
+    fun createDB(app: App): ExchangeRatesRoomDB {
         return Room.databaseBuilder(app,
             ExchangeRatesRoomDB::class.java,
             "exchangeRatesDB")
@@ -23,7 +23,7 @@ class RoomModule() {
 
     @Singleton
     @Provides
-    fun getDAO(db:ExchangeRatesRoomDB):ExchangeRatesRoomDao{
+    fun getDAO(db: ExchangeRatesRoomDB): ExchangeRatesRoomDao {
         return db.databaseDao()
     }
 

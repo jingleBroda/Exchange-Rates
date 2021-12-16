@@ -25,7 +25,7 @@ class RetrofiteModule() {
 
     @Singleton
     @Provides
-    fun createRetrofiteService(retrofit: Retrofit):RetrofiteService{
+    fun createRetrofiteService(retrofit: Retrofit): RetrofiteService {
         return retrofit.create(RetrofiteService::class.java)
     }
 

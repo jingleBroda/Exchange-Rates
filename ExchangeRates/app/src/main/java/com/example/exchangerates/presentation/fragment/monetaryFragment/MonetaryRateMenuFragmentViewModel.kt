@@ -2,7 +2,6 @@ package com.example.exchangerates.presentation.fragment.monetaryFragment
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.exchangerates.data.entity.MoneyRoomModelEntity
 import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.domain.model.ResulteApiModel
 import com.example.exchangerates.domain.usecase.MakeApiUseCase
