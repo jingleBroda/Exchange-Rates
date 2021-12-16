@@ -1,8 +1,7 @@
-package com.example.exchangerates.di.component
+package com.example.exchangerates.app.di.component
 
-import com.example.exchangerates.App
-import com.example.exchangerates.di.module.*
-import com.example.exchangerates.presentation.fragment.monetaryFragment.MonetaryRateMenuFragmentViewModel
+import com.example.exchangerates.app.App
+import com.example.exchangerates.app.di.module.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -17,7 +16,8 @@ import javax.inject.Singleton
     DialogModule::class,
     RetrofiteModule::class,
     RoomModule::class,
-    ViewModelModule::class
+    ViewModelModule::class,
+    RepositoryModule::class
 ])
 
 @Singleton
@@ -29,7 +29,7 @@ interface AppComponent:AndroidInjector<App> {
     @Component.Builder
     interface Builder{
         @BindsInstance
-        fun bindContext(app:App):Builder
+        fun bindContext(app: App):Builder
 
         fun build():AppComponent
     }

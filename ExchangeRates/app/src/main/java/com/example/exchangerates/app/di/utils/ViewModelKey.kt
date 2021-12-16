@@ -1,4 +1,4 @@
-package com.example.exchangerates.di.viewModelPropertyInject
+package com.example.exchangerates.app.di.utils
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

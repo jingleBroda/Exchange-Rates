@@ -1,9 +1,9 @@
-package com.example.exchangerates.di.module
+package com.example.exchangerates.app.di.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.exchangerates.di.viewModelPropertyInject.ViewModelFactory
-import com.example.exchangerates.di.viewModelPropertyInject.ViewModelKey
+import com.example.exchangerates.app.di.utils.ViewModelFactory
+import com.example.exchangerates.app.di.utils.ViewModelKey
 import com.example.exchangerates.presentation.dialog.calculateBottomFragment.BottomSheetViewModel
 import com.example.exchangerates.presentation.fragment.monetaryFragment.MonetaryRateMenuFragmentViewModel
 import dagger.Binds

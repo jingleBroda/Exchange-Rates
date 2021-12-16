@@ -1,7 +1,7 @@
-package com.example.exchangerates.di.module
+package com.example.exchangerates.app.di.module
 
 import androidx.room.Room
-import com.example.exchangerates.App
+import com.example.exchangerates.app.App
 import com.example.exchangerates.data.room.ExchangeRatesRoomDB
 import com.example.exchangerates.data.room.ExchangeRatesRoomDao
 import dagger.Module

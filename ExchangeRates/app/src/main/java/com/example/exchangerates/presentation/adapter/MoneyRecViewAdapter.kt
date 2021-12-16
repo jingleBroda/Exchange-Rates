@@ -14,10 +14,8 @@ class MoneyRecViewAdapter(context:Context, data: MutableMap<String, MoneyModel>)
 
     private val recAdaptContext = context
     private val recAdapterData = data
-    private var actualMoneyType:ArrayList<MoneyModel> = ArrayList() //хранит: либо полный список,
-                                                                    //либо список с закрепленными валютами
-
-    private var oldMoneyType:ArrayList<MoneyModel> = ArrayList()    //хранит полный список валют
+    private var actualMoneyType:ArrayList<MoneyModel> = ArrayList()
+    private var oldMoneyType:ArrayList<MoneyModel> = ArrayList()
 
     private var onClickIteam:((item: MoneyModel)->Unit)? = null
 

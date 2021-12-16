@@ -1,33 +1,85 @@
 package com.example.exchangerates.presentation.fragment.monetaryFragment
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
-import com.example.exchangerates.App
 import com.example.exchangerates.data.retrofite.RetrofiteService
 import com.example.exchangerates.data.room.ExchangeRatesRoomDao
-import com.example.exchangerates.di.component.DaggerAppComponent
 import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.domain.model.ResulteApiModel
+import com.example.exchangerates.domain.usecase.MakeApiUseCase
+import com.example.exchangerates.domain.usecase.MakeDbDataUseCase
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class MonetaryRateMenuFragmentViewModel @Inject constructor(
-    retroServiceInside: RetrofiteService,
-    dbDaoInside: ExchangeRatesRoomDao
+    //retroServiceInside: RetrofiteService,
+    //dbDaoInside: ExchangeRatesRoomDao
+    val makeApiUseCase: MakeApiUseCase,
+    val makeDbDataUseCase: MakeDbDataUseCase
     ): ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
-    private val retroService = retroServiceInside
-    private val dbDao = dbDaoInside
+    //private val retroService = retroServiceInside
+    //private val dbDao = dbDaoInside
 
     private var obserInGetAllDataDb: ((data: List<MoneyRoomModel>)->Unit)?=null
     private var obserInDataApi: ((data: ResulteApiModel)->Unit)?=null
 
     fun makeApi(){
+        val zaprosMakeApi = makeApiUseCase.doIt()
+            .subscribeOn(Schedulers.single())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {result->
+                    obserInDataApi?.invoke(result)
+
+                },
+                {
+                    Log.d("APIError", it.toString())
+                }
+            )
+
+        compositeDisposable.add(zaprosMakeApi)
+    }
+
+    fun getApiData(code:((data: ResulteApiModel)->Unit)){
+        obserInDataApi = code
+    }
+
+    fun makeDbData(){
+        val zaprosGetAllDb = makeDbDataUseCase.doIt()
+            .subscribeOn(Schedulers.single())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    obserInGetAllDataDb?.invoke(it)
+                },
+                {
+                    val emptyMoneyRoomList:List<MoneyRoomModel> = arrayListOf()
+                    obserInGetAllDataDb?.invoke(emptyMoneyRoomList)
+                    Log.d("GetDbError", it.toString())
+                }
+            )
+
+
+
+        compositeDisposable.add(zaprosGetAllDb)
+    }
+
+    fun getDbData(code:(data: List<MoneyRoomModel>)->Unit){
+        obserInGetAllDataDb = code
+    }
+
+    fun cleareCompositeDisposable(){
+        compositeDisposable.clear()
+    }
+
+}
+
+/*
+fun makeApi(){
         val zaprosApi = retroService.getActualMoney()
             .subscribeOn(Schedulers.single())
             .observeOn(AndroidSchedulers.mainThread())
@@ -71,9 +123,4 @@ class MonetaryRateMenuFragmentViewModel @Inject constructor(
     fun getDbData(code:(data: List<MoneyRoomModel>)->Unit){
         obserInGetAllDataDb = code
     }
-
-    fun cleareCompositeDisposable(){
-        compositeDisposable.clear()
-    }
-
-}
+ */

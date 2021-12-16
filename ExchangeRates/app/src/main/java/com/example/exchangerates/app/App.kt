@@ -1,6 +1,6 @@
-package com.example.exchangerates
+package com.example.exchangerates.app
 
-import com.example.exchangerates.di.component.DaggerAppComponent
+import com.example.exchangerates.app.di.component.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 

@@ -1,4 +1,4 @@
-package com.example.exchangerates.di.module
+package com.example.exchangerates.app.di.module
 
 import com.example.exchangerates.data.retrofite.RetrofiteService
 import dagger.Module

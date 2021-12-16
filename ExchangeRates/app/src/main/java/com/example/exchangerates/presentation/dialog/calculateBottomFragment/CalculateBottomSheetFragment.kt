@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +14,9 @@ import com.example.exchangerates.R
 import com.example.exchangerates.databinding.BottomShhetFragmentBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import androidx.lifecycle.ViewModelProviders
-import com.example.exchangerates.di.viewModelPropertyInject.ViewModelFactory
+import com.example.exchangerates.app.di.utils.ViewModelFactory
 import com.example.exchangerates.domain.model.MoneyRoomModel
-import com.example.exchangerates.navigator.navigator
+import com.example.exchangerates.app.navigator.navigator
 import com.example.exchangerates.presentation.fragment.monetaryFragment.MonetaryRateMenuFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog

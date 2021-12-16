@@ -1,4 +1,4 @@
-package com.example.exchangerates.navigator
+package com.example.exchangerates.app.navigator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
