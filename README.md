@@ -5,7 +5,7 @@
 - Работа с сетью: Retrofit
 - Многопоточка: RxJava3
 - БД:Room
-- UI: Single Activity, MVVM, Custome Navigator.
+- UI: Single Activity, MVVM.
 - DI: Dagger2
 - Архитектура: Clean Architecture on multi-modularity.
 - API Docs: "https://www.cbr-xml-daily.ru"
