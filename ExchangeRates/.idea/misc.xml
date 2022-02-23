@@ -19,6 +19,8 @@
         <entry key="..\:/AndroidAPP/ExchangeRates/app/src/main/res/layout/fragment_monetary_rate_menu.xml" value="0.4" />
         <entry key="..\:/AndroidAPP/ExchangeRates/app/src/main/res/layout/money_rec_view_row.xml" value="0.536" />
         <entry key="..\:/AndroidAPP/ExchangeRates/app/src/main/res/layout/splash_screen.xml" value="0.264" />
+        <entry key="..\:/GitLocalREPOS/Exchange-Rates/ExchangeRates/app/src/main/res/drawable/bottom_sheet_background.xml" value="0.24074074074074073" />
+        <entry key="..\:/GitLocalREPOS/Exchange-Rates/ExchangeRates/app/src/main/res/layout/bottom_shhet_fragment.xml" value="0.536" />
       </map>
     </option>
   </component>

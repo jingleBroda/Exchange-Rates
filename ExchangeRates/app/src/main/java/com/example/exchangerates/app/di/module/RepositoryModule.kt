@@ -22,13 +22,6 @@ class RepositoryModule {
     }
 
     @Provides
-    fun makeApiUseCase(
-        repository:RepositoryExchangeRates
-    ):MakeApiUseCase{
-        return MakeApiUseCase(repository)
-    }
-
-    @Provides
     fun makeDbDataUseCase(
         repository:RepositoryExchangeRates
     ): MakeDbDataUseCase {
@@ -54,5 +47,12 @@ class RepositoryModule {
         repository:RepositoryExchangeRates
     ):MakeSingleInsertDbDataUseCase{
         return MakeSingleInsertDbDataUseCase(repository)
+    }
+
+    @Provides
+    fun makeApiUseCase(
+        repository:RepositoryExchangeRates
+    ):MakeApiUseCase{
+        return MakeApiUseCase(repository)
     }
 }

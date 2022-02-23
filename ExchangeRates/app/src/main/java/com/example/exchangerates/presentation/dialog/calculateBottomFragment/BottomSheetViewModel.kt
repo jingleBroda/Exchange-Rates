@@ -1,7 +1,7 @@
 package com.example.exchangerates.presentation.dialog.calculateBottomFragment
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.domain.usecase.MakeDbSpecificDataUseCase
 import com.example.exchangerates.domain.usecase.MakeDeleteSingeDataInfoDbUseCase
@@ -9,61 +9,34 @@ import com.example.exchangerates.domain.usecase.MakeSingleInsertDbDataUseCase
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class BottomSheetViewModel @Inject constructor(
-    val makeDbSpecificDataUseCase: MakeDbSpecificDataUseCase,
-    val makeSingleInsertDbDataUseCase: MakeSingleInsertDbDataUseCase,
-    val makeDeleteSingeDataInfoDbUseCase: MakeDeleteSingeDataInfoDbUseCase
+    private val makeDbSpecificDataUseCase: MakeDbSpecificDataUseCase,
+    private val makeSingleInsertDbDataUseCase: MakeSingleInsertDbDataUseCase,
+    private val makeDeleteSingeDataInfoDbUseCase: MakeDeleteSingeDataInfoDbUseCase
     ): ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private var obserInGetSpecificDataDb: ((data: MoneyRoomModel)->Unit)?=null
+    private val _specificDataDb = MutableSharedFlow<MoneyRoomModel>()
+    val specificDataDb:SharedFlow<MoneyRoomModel> = _specificDataDb.asSharedFlow()
 
     fun makeDbSpecificData(charCode:String){
-        val zaprosSpecificDataDb = makeDbSpecificDataUseCase.doIt(charCode)
-            .subscribeOn(Schedulers.single())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    Log.d("GetDbError", it.toString())
-                    obserInGetSpecificDataDb?.invoke(it)
-                },
-                {
-                    val emptyDataRoom = MoneyRoomModel(
-                        "",
-                        0.0,
-                        false
-                    )
-                    obserInGetSpecificDataDb?.invoke(emptyDataRoom)
-                    Log.d("GetDbErrorM", it.toString())
-                }
-            )
-
-
-
-        compositeDisposable.add(zaprosSpecificDataDb)
-    }
-
-    fun getDBSpecificData(code:(data: MoneyRoomModel)->Unit){
-        obserInGetSpecificDataDb = code
+       viewModelScope.launch {
+           _specificDataDb.emit(makeDbSpecificDataUseCase.doIt(charCode))
+       }
     }
 
     fun makeSingleInsertDbData(data: MoneyRoomModel){
         val zaprosSingleInsertDbData = makeSingleInsertDbDataUseCase.doIt(data)
             .subscribeOn(Schedulers.single())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    Log.d("GetDbDataNew", data.toString())
-                },
-                {
-
-                }
-            )
-
-
+            .subscribe()
 
         compositeDisposable.add(zaprosSingleInsertDbData)
     }
@@ -78,8 +51,7 @@ class BottomSheetViewModel @Inject constructor(
         compositeDisposable.add(zaprosDeleteSingeDataInfoDb)
     }
 
-    fun cleareCompositeDisposable(){
+    fun clearCompositeDisposable(){
         compositeDisposable.clear()
     }
-
 }

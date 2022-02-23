@@ -1,120 +1,47 @@
 package com.example.exchangerates.presentation.fragment.monetaryFragment
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.domain.model.ResulteApiModel
 import com.example.exchangerates.domain.usecase.MakeApiUseCase
 import com.example.exchangerates.domain.usecase.MakeDbDataUseCase
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MonetaryRateMenuFragmentViewModel @Inject constructor(
-    val makeApiUseCase: MakeApiUseCase,
-    val makeDbDataUseCase: MakeDbDataUseCase
+    private val makeApiUseCase: MakeApiUseCase,
+    private val makeDbDataUseCase: MakeDbDataUseCase,
     ): ViewModel() {
 
-    private val compositeDisposable = CompositeDisposable()
+    private var jobViewModel:Job? = null
 
-    private var obserInGetAllDataDb: ((data: List<MoneyRoomModel>)->Unit)?=null
-    private var obserInDataApi: ((data: ResulteApiModel)->Unit)?=null
+    private val _dataApi = MutableSharedFlow<ResulteApiModel>()
+    val dataApi:SharedFlow<ResulteApiModel> = _dataApi.asSharedFlow()
+
+    private val _dbData = MutableSharedFlow<List<MoneyRoomModel>>()
+    val dbData:SharedFlow<List<MoneyRoomModel>> = _dbData.asSharedFlow()
 
     fun makeApi(){
-        val zaprosMakeApi = makeApiUseCase.doIt()
-            .subscribeOn(Schedulers.single())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {result->
-                    obserInDataApi?.invoke(result)
+        jobViewModel = viewModelScope.async {
+            _dataApi.emit(makeApiUseCase.doIt())
 
-                },
-                {
-                    Log.d("APIError", it.toString())
-                }
-            )
-
-        compositeDisposable.add(zaprosMakeApi)
+        }
+        jobViewModel!!.start()
     }
 
-    fun getApiData(code:((data: ResulteApiModel)->Unit)){
-        obserInDataApi = code
+    fun cancelCoroutine() {
+        jobViewModel!!.cancel()
     }
 
     fun makeDbData(){
-        val zaprosGetAllDb = makeDbDataUseCase.doIt()
-            .subscribeOn(Schedulers.single())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    obserInGetAllDataDb?.invoke(it)
-                },
-                {
-                    val emptyMoneyRoomListEntity:List<MoneyRoomModel> = arrayListOf()
-                    obserInGetAllDataDb?.invoke(emptyMoneyRoomListEntity)
-                    Log.d("GetDbError", it.toString())
-                }
-            )
-
-
-
-        compositeDisposable.add(zaprosGetAllDb)
+        viewModelScope.launch {
+            _dbData.emit(makeDbDataUseCase.doIt())
+        }
     }
-
-    fun getDbData(code:(data: List<MoneyRoomModel>)->Unit){
-        obserInGetAllDataDb = code
-    }
-
-    fun cleareCompositeDisposable(){
-        compositeDisposable.clear()
-    }
-
 }
-
-/*
-fun makeApi(){
-        val zaprosApi = retroService.getActualMoney()
-            .subscribeOn(Schedulers.single())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {result->
-                    obserInDataApi?.invoke(result)
-
-                },
-                {
-                    Log.d("APIError", it.toString())
-                }
-            )
-
-        compositeDisposable.add(zaprosApi)
-    }
-
-    fun getApiData(code:((data: ResulteApiModel)->Unit)){
-        obserInDataApi = code
-    }
-
-    fun makeDbData(){
-        val zaprosGetAllDb = dbDao.getCurrencyCours()
-            .subscribeOn(Schedulers.single())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    obserInGetAllDataDb?.invoke(it)
-                },
-                {
-                    val emptyMoneyRoomList:List<MoneyRoomModel> = arrayListOf()
-                    obserInGetAllDataDb?.invoke(emptyMoneyRoomList)
-                    Log.d("GetDbError", it.toString())
-                }
-            )
-
-
-
-        compositeDisposable.add(zaprosGetAllDb)
-    }
-
-    fun getDbData(code:(data: List<MoneyRoomModel>)->Unit){
-        obserInGetAllDataDb = code
-    }
- */

@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface RetrofiteService {
     @GET("https://www.cbr-xml-daily.ru/daily_json.js")
-    fun getActualMoney():Single<ResulteApiModel>
+    suspend fun getActualMoney():ResulteApiModel
 
 }

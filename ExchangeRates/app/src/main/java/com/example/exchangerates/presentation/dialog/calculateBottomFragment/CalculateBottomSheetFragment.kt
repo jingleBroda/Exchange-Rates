@@ -14,21 +14,21 @@ import com.example.exchangerates.R
 import com.example.exchangerates.databinding.BottomShhetFragmentBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import com.example.exchangerates.app.di.utils.ViewModelFactory
-import com.example.exchangerates.data.entity.MoneyRoomModelEntity
 import com.example.exchangerates.app.navigator.navigator
 import com.example.exchangerates.domain.model.MoneyRoomModel
-import com.example.exchangerates.presentation.fragment.monetaryFragment.MonetaryRateMenuFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 
-class CalculateBottomSheetFragment():BottomSheetDialogFragment(), HasAndroidInjector  {
+class CalculateBottomSheetFragment :BottomSheetDialogFragment(), HasAndroidInjector  {
 
 
     private lateinit var binding:BottomShhetFragmentBinding
@@ -45,8 +45,8 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment(), HasAndroidInje
     private var editTextFocusParam = true
 
     companion object{
-        val coursCurrencyKey = "coursСurrency"
-        val nameCurrencyKey = "nameСurrency"
+        const val coursCurrencyKey = "coursСurrency"
+        const val nameCurrencyKey = "nameСurrency"
 
         fun setArguments(coursCurrency:Double, nameCurrency:String):CalculateBottomSheetFragment{
             val newCalculateBottomFrag = CalculateBottomSheetFragment()
@@ -77,8 +77,6 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment(), HasAndroidInje
         insideCoursCurrency = requireArguments().getDouble(coursCurrencyKey, 0.0)
         insideNameCurrency = requireArguments().getString(nameCurrencyKey).toString()
 
-        viewModel.makeDbSpecificData(insideNameCurrency)
-
     }
 
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
@@ -104,28 +102,31 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment(), HasAndroidInje
 
     override fun onStart() {
         super.onStart()
+        viewModel.makeDbSpecificData(insideNameCurrency)
 
-        viewModel.getDBSpecificData {moneyRoomModel->
+        lifecycleScope.launchWhenStarted {
+            viewModel.specificDataDb.collect{ moneyRoomModel->
 
-            if(moneyRoomModel.lockStatus){
-                binding.lockButton.setImageResource(R.drawable.lock_currency)
-                binding.lockButton.visibility = View.VISIBLE
+                if(moneyRoomModel.lockStatus){
+                    binding.lockButton.setImageResource(R.drawable.lock_currency)
+                    binding.lockButton.visibility = View.VISIBLE
+                }
+                else{
+                    binding.lockButton.setImageResource(R.drawable.unclock_currency)
+                    binding.lockButton.visibility = View.VISIBLE
+                }
+
+                binding.lockButton.setOnClickListener{
+                    analyzeFunOnClickButtonLock(moneyRoomModel)
+                }
+
+                settingEditTextBottomSheet()
+
             }
-            else{
-                binding.lockButton.setImageResource(R.drawable.unclock_currency)
-                binding.lockButton.visibility = View.VISIBLE
-            }
-
-            binding.lockButton.setOnClickListener{
-                AnalizeFunOnClickButtonLock(moneyRoomModel)
-            }
-
-            settingEditTextBottomSheet()
-
         }
     }
 
-    private fun AnalizeFunOnClickButtonLock(moneyRoomModelEntity: MoneyRoomModel){
+    private fun analyzeFunOnClickButtonLock(moneyRoomModelEntity: MoneyRoomModel){
         if(moneyRoomModelEntity.lockStatus){
             binding.lockButton.setImageResource(R.drawable.unclock_currency)
             viewModel.makeDeleteSingeDataInfoDb(insideNameCurrency)
@@ -145,11 +146,11 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment(), HasAndroidInje
         binding.onePointCurrent.text =
             "1" + insideNameCurrency + "=" + insideCoursCurrency.toString() + "RUB"
 
-        binding.countSelectCurrent.setOnFocusChangeListener { view, hasfocus ->
+        binding.countSelectCurrent.setOnFocusChangeListener { _, _ -> // название парметров: view, hasfocus
             editTextFocusParam = true
         }
 
-        binding.countRubCurrent.setOnFocusChangeListener { view, hasfocus ->
+        binding.countRubCurrent.setOnFocusChangeListener { _, _ ->
             editTextFocusParam = false
         }
 
@@ -218,9 +219,8 @@ class CalculateBottomSheetFragment():BottomSheetDialogFragment(), HasAndroidInje
     }
 
     override fun onDestroy() {
-        viewModel.cleareCompositeDisposable()
-        val tmpFragment = MonetaryRateMenuFragment()
-        navigator().showNewScreen(tmpFragment)
+        viewModel.clearCompositeDisposable()
+        navigator().showStartFragment()
         super.onDestroy()
     }
 

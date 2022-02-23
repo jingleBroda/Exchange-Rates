@@ -7,15 +7,15 @@ import io.reactivex.rxjava3.core.Single
 
 abstract class RepositoryExchangeRates {
 
-    abstract fun makeDbSpecificData(
+    abstract suspend fun makeApi():ResulteApiModel
+
+    abstract suspend fun makeDbData():List<MoneyRoomModel>
+
+    abstract suspend fun makeDbSpecificData(
         charCode:String
-    ):Single<MoneyRoomModel>
+    ):MoneyRoomModel
 
     abstract fun makeSingleInsertDbData(data: MoneyRoomModel):Completable
 
     abstract fun makeDeleteSingeDataInfoDb(charCode:String):Completable
-
-    abstract fun makeApi(): Single<ResulteApiModel>
-
-    abstract fun makeDbData():Single<List<MoneyRoomModel>>
 }

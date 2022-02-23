@@ -2,7 +2,7 @@
 package com.example.exchangerates.app.di.module;
 
 import com.example.exchangerates.domain.repository.RepositoryExchangeRates;
-import com.example.exchangerates.domain.usecase.MakeApiUseCase;
+import com.example.exchangerates.domain.usecase.MakeApiUseCaseRx;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;

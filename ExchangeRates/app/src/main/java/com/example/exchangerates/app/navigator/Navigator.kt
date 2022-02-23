@@ -8,4 +8,6 @@ fun Fragment.navigator(): Navigator {
 
 interface Navigator {
     fun showNewScreen(f:Fragment)
+    fun back()
+    fun showStartFragment()
 }

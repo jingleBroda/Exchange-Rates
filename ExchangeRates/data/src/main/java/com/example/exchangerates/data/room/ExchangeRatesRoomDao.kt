@@ -8,10 +8,10 @@ import io.reactivex.rxjava3.core.Single
 @Dao
 interface ExchangeRatesRoomDao {
     @Query("SELECT * FROM elect_currency")
-    fun getCurrencyCours(): Single<List<MoneyRoomModelEntity>>
+    suspend fun getCurrencyCours(): List<MoneyRoomModelEntity>
 
     @Query("SELECT * FROM elect_currency WHERE charCodeId = :charCode")
-    fun getSpecificCurrencyCours(charCode:String): Single<MoneyRoomModelEntity>
+    suspend fun getSpecificCurrencyCours(charCode:String): MoneyRoomModelEntity
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     fun insertCurrency(electCurrency: MoneyRoomModelEntity) :Completable

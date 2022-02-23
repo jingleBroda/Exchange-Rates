@@ -24,7 +24,7 @@ import com.example.exchangerates.data.retrofite.RetrofiteService;
 import com.example.exchangerates.data.room.ExchangeRatesRoomDB;
 import com.example.exchangerates.data.room.ExchangeRatesRoomDao;
 import com.example.exchangerates.domain.repository.RepositoryExchangeRates;
-import com.example.exchangerates.domain.usecase.MakeApiUseCase;
+import com.example.exchangerates.domain.usecase.MakeApiUseCaseRx;
 import com.example.exchangerates.domain.usecase.MakeDbDataUseCase;
 import com.example.exchangerates.domain.usecase.MakeDbSpecificDataUseCase;
 import com.example.exchangerates.domain.usecase.MakeDeleteSingeDataInfoDbUseCase;

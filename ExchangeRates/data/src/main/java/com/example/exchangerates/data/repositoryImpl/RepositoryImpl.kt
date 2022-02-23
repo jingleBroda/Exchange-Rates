@@ -1,5 +1,6 @@
 package com.example.exchangerates.data.repositoryImpl
 
+import android.util.Log
 import com.example.exchangerates.data.retrofite.RetrofiteService
 import com.example.exchangerates.data.room.ExchangeRatesRoomDao
 import com.example.exchangerates.data.entity.MoneyRoomModelEntity
@@ -7,23 +8,37 @@ import com.example.exchangerates.domain.model.MoneyRoomModel
 import com.example.exchangerates.domain.model.ResulteApiModel
 import com.example.exchangerates.domain.repository.RepositoryExchangeRates
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
-    val dbDao: ExchangeRatesRoomDao,
-    val retroService: RetrofiteService
-):RepositoryExchangeRates(){
+    private val dbDao: ExchangeRatesRoomDao,
+    private val retroService: RetrofiteService
+):RepositoryExchangeRates() {
 
-    override fun makeDbSpecificData(
+    override suspend fun makeApi(): ResulteApiModel {
+        return retroService.getActualMoney()
+    }
+
+    override suspend fun makeDbData(): List<MoneyRoomModel> {
+        return MoneyRoomModelEntity.toMoneyRoomModelList( dbDao.getCurrencyCours())
+    }
+
+    override suspend fun makeDbSpecificData(
         charCode: String
-    ): Single<MoneyRoomModel> {
-
-        val zaprosSpecificDataDb = dbDao.getSpecificCurrencyCours(charCode = charCode).map(
-            MoneyRoomModelEntity::toMoneyRoomModel
-        )
-        return zaprosSpecificDataDb //as Single<MoneyRoomModel>
-
+    ): MoneyRoomModel {
+        return if(dbDao.getSpecificCurrencyCours(charCode = charCode) == null){ //проверка на то, сохранял ли пользователь валюту
+            // если нет, то передаем стандартные параметры
+            val emptyDataRoom = MoneyRoomModel(
+                "",
+                0.0,
+                false
+            )
+            emptyDataRoom
+        }
+        else{
+            //иначе те, которые сохранены в БД
+            dbDao.getSpecificCurrencyCours(charCode = charCode).toMoneyRoomModel()
+        }
     }
 
     override fun makeSingleInsertDbData(data: MoneyRoomModel): Completable {
@@ -38,17 +53,4 @@ class RepositoryImpl @Inject constructor(
         val zaprosDeleteSingeDataInfoDb = dbDao.deleteSingleData(charCode)
         return zaprosDeleteSingeDataInfoDb
     }
-
-    override fun makeApi(): Single<ResulteApiModel> {
-        val zaprosApi = retroService.getActualMoney()
-        return zaprosApi
-    }
-
-    override fun makeDbData(): Single<List<MoneyRoomModel>> {
-        val zaprosGetAllDb = dbDao.getCurrencyCours().map(
-            MoneyRoomModelEntity::toMoneyRoomModelList
-        )
-        return zaprosGetAllDb //as Single<List<MoneyRoomModel>>
-    }
-
 }
